@@ -131,6 +131,32 @@ string cipher(int k, int n, string s) {
     return final_result;
 }
 
+/*
+ * The Minion Game: Juego de substrings, un jugador juega con consonantes y el otro con vocales
+ * Recibe: Un string con la palabra, debe contener solo letras mayúsculas
+ * Imprime el nombre y puntaje del ganador, "Draw" en caso de empate
+ */
+void the_minion_game(string palabra){
+    /* puntaje[0] = Kevin
+    puntaje[1] = Stuart */
+    int puntaje[2] = {0,0};   // Almacena el puntaje de cada jugador
+
+    // Verificar si la letra actual es una vocal o una consonante
+    for (int i = 0; i < palabra.length(); i++){
+        if (palabra[i]=='A' || palabra[i]=='E' || palabra[i]=='I' || palabra[i]=='O' || palabra[i]=='U')
+            puntaje[0] += palabra.length() - i; // Sumar al puntaje el largo de la palabra menos el contador
+        else    // La letra en una consonante
+            puntaje[1] += palabra.length() - i;
+    }
+
+    if (puntaje[0] > puntaje[1])
+        cout << "Kevin " << puntaje[0] << endl;
+    else if (puntaje[0] < puntaje[1])
+        cout << "Stuart " << puntaje[1] << endl;
+    else
+        cout << "Draw" << endl;
+}
+
 int main(){
     // ---------------- Prueba 1 para compareTriplets ----------------
     cout << "Prueba #1 para compareTriplets" << endl;
@@ -186,46 +212,19 @@ int main(){
     result = cipher(2, 6, "1110001");
     cout << "Resultado = " << result << "\n";
 
+    // ---------------- Prueba 1 para The Minion Game ----------------
+    cout << endl;
+    cout << "Palabra = BANANA" << endl;
+    cout << "Resultado = ";
+    the_minion_game("BANANA");
+
+    // ---------------- Prueba 2 para The Minion Game ----------------
+    cout << endl;
+    cout << "Palabra = ARIAL" << endl;
+    cout << "Resultado = ";
+    the_minion_game("ARIAL");
+
     return 0;
-}
-
-string ltrim(const string &str) {
-    string s(str);
-
-    s.erase(
-        s.begin(),
-        find_if(s.begin(), s.end(), not1(ptr_fun<int, int>(isspace)))
-    );
-
-    return s;
-}
-
-string rtrim(const string &str) {
-    string s(str);
-
-    s.erase(
-        find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(),
-        s.end()
-    );
-
-    return s;
-}
-
-vector<string> split(const string &str) {
-    vector<string> tokens;
-
-    string::size_type start = 0;
-    string::size_type end = 0;
-
-    while ((end = str.find(" ", start)) != string::npos) {
-        tokens.push_back(str.substr(start, end - start));
-
-        start = end + 1;
-    }
-
-    tokens.push_back(str.substr(start));
-
-    return tokens;
 }
 
 
