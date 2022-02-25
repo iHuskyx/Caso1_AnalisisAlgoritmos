@@ -1,8 +1,2 @@
 output: caso1_AndreaLi.o
 	g++ caso1_AndreaLi.o -o output
-
-caso1_AndreaLi.o: caso1_AndreaLi.cpp
-	g++ -c caso1_AndreaLi.cpp
-
-clean:
-	rm *.o output
