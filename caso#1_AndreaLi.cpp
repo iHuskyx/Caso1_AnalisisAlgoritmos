@@ -6,11 +6,6 @@
 
 using namespace std;
 
-string ltrim(const string &);
-string rtrim(const string &);
-vector<string> split(const string &);
-
-
 /* compareTriplets2 es mejor que compareTriplets1 porque en la primera implementación se utiliza un ciclo for,
  * en el cual se realizan 4 comparaciones del for (cuando verifica si se ha llegado a la condición de parada)
  * y 6 internas (comparar los elementos de a y b). Mientras que en la segunda se utilizan un total de 6 comparaciones.
