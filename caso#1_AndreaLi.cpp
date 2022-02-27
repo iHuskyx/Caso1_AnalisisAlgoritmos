@@ -1,6 +1,8 @@
 // Caso #1 - Análisis de algoritmos Grupo 1 - Andrea Li 2021028783
+
 #include <bits/stdc++.h>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -17,10 +19,10 @@ vector<int> compareTriplets1(vector<int> a, vector<int> b) {
     int a_score = 0;
     int b_score = 0;
 
-    for (int i = 0; i < 3; i++) {
-        if (a[i] > b[i])
+    for (int i = 0; i < 3; i++) {   // La longitud de a y b es constante = 3
+        if (a[i] > b[i])    // Si el elemento en a es mayor que b, es un punto para a
             a_score++;
-        else if (a[i] < b[i])
+        else if (a[i] < b[i])  // Si el elemento en b es mayor que a, es un punto para b
             b_score++;
     }
 
@@ -31,7 +33,7 @@ vector<int> compareTriplets1(vector<int> a, vector<int> b) {
 vector<int> compareTriplets2(vector<int> a, vector<int> b) {
     int a_score = 0;
     int b_score = 0;
-
+    // Comparar los elementos uno por uno en a y b
     if (a[0] > b[0])
         a_score++;
     else if (a[0] < b[0])
@@ -93,9 +95,45 @@ string timeConversion2(string s) {
 	return full_time;
 }
 
-/*
- * Ejercicios que solo se hace la implementación más optimizada
+/* birthday2 es mejor que birthday1 porque utiliza solamente un for mientras que birthday1 utiliza
+ * un for anidado. En birthday2 se utiliza una variable "segmento" en vez de otro for
+ * y así se hacen menos comparaciones que en birthday1.
  */
+int birthday1(vector<int> s, int d, int m) {
+    int result = 0, suma = 0;
+
+    for (int i = 0; i < s.size(); i++) {
+        // Avanzar hasta llegar a cantidad de porciones igual a mes (0 a mes-1)
+        for (int j = 0; j < m; j++) {
+            suma += s[i];
+            if (suma == d)  // Si la suma es igual al día, se incrementa el resultado
+                result++;
+            i++;   // Incrementar i para sumar la siguiente porción
+        }
+        suma = 0;   // Se pone suma en 0 para analizar el siguiente segmento
+    }
+    return result;
+}
+
+int birthday2(vector<int> s, int d, int m) {
+    int result = 0, suma = 0, segment = 1;
+
+    for (int i = 0; i < s.size(); i++) {
+        suma += s[i];
+
+        if (segment == m) {
+            if (suma == d) // Si la suma actual es igual al dia, se incrementa result
+                result++;
+            segment = 2;    // Se pone segment en 2 porque se toma en cuenta el cuadro actual
+            suma = s[i];    // Ya que se toma en cuenta el actual, se asigna ese valor a suma
+        } else
+            segment++;  // Si todavía no se ha llegado al mes, se incrementa la porción actual
+    }
+    return result;
+}
+
+
+//Ejercicios que solo se hace la implementación más optimizada
 
 /*
  * Cipher: Debe decodificar el mensaje enviado.
@@ -148,13 +186,38 @@ void the_minion_game(string palabra){
         else    // La letra en una consonante
             puntaje[1] += palabra.length() - i;
     }
-
-    if (puntaje[0] > puntaje[1])
+    // Imprimir resultados
+    if (puntaje[0] > puntaje[1])    // Gana Kevin
         cout << "Kevin " << puntaje[0] << endl;
-    else if (puntaje[0] < puntaje[1])
+    else if (puntaje[0] < puntaje[1])   // Gana Stuart
         cout << "Stuart " << puntaje[1] << endl;
-    else
+    else    // Empate
         cout << "Draw" << endl;
+}
+
+/*
+ * Pairs: Determinar el número de pares en un array que tienen una diferencia igual al valor objetivo
+ * Recibe 2 parámetros: Un número entero k: Valor objetivo. Un array de números enteros arr.
+ * Retorna el número de pares que cumplen con el criterio
+ */
+int pairs(int k, vector<int> arr) {
+    int result = 0, resta, suma;
+    vector<int> copiaArr = arr; // Copia de arr para buscar el mayor valor de suma posible
+    sort(copiaArr.begin(), copiaArr.end()); // Ordenar la copia de arr ascendentemente
+
+    // Utilizar la suma de los dos valores mayores para que sea el tamaño del hashtable
+    vector<int> hashtable(copiaArr[copiaArr.size()-1]+copiaArr[copiaArr.size()-2]);
+
+    for (int i = 0; i < arr.size(); i++) {
+        resta = abs(k - arr[i]);    // Obtener la suma y resta del valor actual con k
+        suma = k + arr[i];
+        hashtable[resta] = resta;   // Asignar en el hashtable
+        hashtable[suma] = suma;
+
+        if (hashtable[arr[i]] != 0) // Si ese valor existe en el hashtable, result aumenta en 1
+            result++;
+    }
+    return result;
 }
 
 int main(){
@@ -197,6 +260,21 @@ int main(){
     cout << "Resultado = ";
     cout << result2_conversion << "\n";
 
+    // ---------------- Prueba 1 para Subarray Division ----------------
+    cout << endl;
+    cout << "Prueba #1 para Subarray Division" << endl;
+    cout << "a = {1, 1, 1, 1, 1}   dia = 3  mes = 2" << endl;
+    int d = 3, m = 2;
+    vector<int> s_subarrayDiv = {1, 1, 1, 1, 1} ;
+    cout << "Resultado = " << birthday1(s_subarrayDiv, d, m) << endl;
+
+    // ---------------- Prueba 2 para Subarray Division ----------------
+    cout << endl;
+    cout << "Prueba #2 para Subarray Division" << endl;
+    cout << "a = {1, 2, 1, 3, 2}   dia = 3  mes = 2" << endl;
+    s_subarrayDiv = {1, 2, 1, 3, 2};
+    cout << "Resultado = " << birthday2(s_subarrayDiv, d, m) << endl;
+
     // ---------------- Prueba 1 para Cipher ----------------
     cout << endl;
     cout << "--------------------------------" << endl;
@@ -214,16 +292,38 @@ int main(){
 
     // ---------------- Prueba 1 para The Minion Game ----------------
     cout << endl;
+    cout << "Prueba #1 para The Minion Game" << endl;
     cout << "Palabra = BANANA" << endl;
     cout << "Resultado = ";
     the_minion_game("BANANA");
 
     // ---------------- Prueba 2 para The Minion Game ----------------
     cout << endl;
+    cout << "Prueba #2 para The Minion Game" << endl;
     cout << "Palabra = ARIAL" << endl;
     cout << "Resultado = ";
     the_minion_game("ARIAL");
 
+    // ---------------- Prueba 1 para Pairs ----------------
+    cout << endl;
+    cout << "Prueba #1 para Pairs" << endl;
+    cout << "arr = {1, 5, 2, 4, 9}" << endl;
+    cout << "k = 1" << endl;
+    vector<int> arr = {1, 5, 2, 4, 9};
+    int k = 1;
+    cout << "Resultado = " << pairs(k, arr) << endl;
+
+    // ---------------- Prueba 2 para Pairs ----------------
+    cout << endl;
+    cout << "Prueba #2 para Pairs" << endl;
+    cout << "arr = {1, 5, 3, 4, 2}" << endl;
+    cout << "k = 2" << endl;
+    arr = {1, 5, 3, 4, 2};
+    k = 2;
+    cout << "Resultado = " << pairs(k, arr) << endl;
+
+    cout << endl;
+    cout << "Fin del programa" << endl;
     return 0;
 }
 
