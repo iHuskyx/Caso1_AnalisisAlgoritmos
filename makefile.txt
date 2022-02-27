@@ -1,2 +1,2 @@
-output: caso1_AndreaLi.o
-	g++ caso1_AndreaLi.o -o output
+output: 
+	g++ caso1_AndreaLi.cpp -o output
