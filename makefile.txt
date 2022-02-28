@@ -1,2 +1,0 @@
-output: 
-	g++ caso1_AndreaLi.cpp -o output
